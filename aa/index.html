@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name = "viewport" content = "width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+</head>
+<style>
+	body,ul,li{
+		margin: 0;
+		padding: 0;
+	}
+	ul,li{
+		list-style: none;
+	}
+	.box{
+		width: 100%;
+		height: auto;
+		border: 1px solid red;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	.ul-box{
+		height: auto;
+	}
+	.ul-box:after{
+		content:"";
+		display: block;
+		clear: both;
+	}
+	li{
+		float: left;
+		font-size: 0;
+	}
+	img{
+		width: 100%;
+	}
+</style>
+<body>
+	<div class="box">
+		<ul class="ul-box">
+			<li><a href="http://www.baidu.com"><img src="1.jpg" alt=""></a></li>
+			<li><a href="http://www.baidu.com"><img src="2.jpg" alt=""></a></li>
+			<li><a href="http://www.baidu.com"><img src="3.jpg" alt=""></a></li>
+			<li><a href="http://www.baidu.com"><img src="4.jpg" alt=""></a></li>
+			<li><a href="http://www.baidu.com"><img src="5.jpg" alt=""></a></li>
+			<li><a href="http://www.baidu.com"><img src="6.jpg" alt=""></a></li>
+		</ul>
+	</div>
+</body>
+<script>
+	var ul=document.querySelector(".ul-box");
+	var li=document.querySelectorAll(".ul-box>li");
+	var wc=document.documentElement.clientWidth;
+	ul.style.width=li.length*wc+"px";
+	for (var i = 0; i < li.length; i++) {
+		li[i].style.width=wc+"px";
+	};
+	var index=0;
+	var ss=0;
+	ul.addEventListener("touchstart",function(e){
+		clearInterval(t);
+		var th=e.targetTouches[0];
+		var sf=th.clientX;
+		var xw=0;
+		var x=0;
+		ul.addEventListener("touchmove",move);
+		function move(e){
+			ss=e.timeStamp;
+			var th=e.targetTouches[0];
+			xw=th.clientX;
+			x=xw-sf;
+			ul.style.transition="";
+			ul.style.transform="translate3d("+(xw-sf-index*wc)+"px,0,0)";
+		}
+		ul.addEventListener("touchend",end);
+		function end(e){
+			ul.removeEventListener("touchmove",move);
+			var as=e.timeStamp;
+			if (Math.abs(xw-sf)>wc/2||(as-ss)<600) {
+				if(x<0){
+					index++;
+				}else if(x>0){
+					index--;
+				}
+			};
+			if (index==li.length) {
+				index=li.length-1;
+			};
+			if (index==-1) {
+				index=0;
+			};
+			ul.style.transition="transform 1s";
+			ul.style.transform="translate3d("+(-index*wc)+"px,0,0)";
+			ul.removeEventListener("touchend",end);
+			t=setInterval(aa,3000);		
+		};
+	});
+	var t=setInterval(aa,3000);
+	var dd=0;
+	function aa(){
+		dd++;
+		ul.style.transition="transform .5s";
+		if (dd==li.length) {
+			dd=0;
+			ul.style.transition="";
+		};
+		ul.style.transform="translate3d("+(-dd*wc)+"px,0,0)";
+
+	};
+</script>
+</html>
